@@ -17,3 +17,35 @@ class User(db.Model):
             "email": self.email,
             # do not serialize the password, its a security breach
         }
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), unique=True, nullable=False)    
+    product = db.relationship('Product', lazy=True)
+
+    def __repr__(self):
+        return '<Category %r>' % self.title
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            # do not serialize the password, its a security breach
+        }
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), unique=True, nullable=False)
+    price = db.Column(db.Float, unique=False, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey(Category.id))
+
+    def __repr__(self):
+        return '<Product %r>' % self.title
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "price": self.price
+            # do not serialize the password, its a security breach
+        }
